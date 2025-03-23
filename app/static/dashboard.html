@@ -74,9 +74,9 @@
                 body: soapBody
             });
 
-            const xml = await res.text();
             const parser = new DOMParser();
-            const doc = parser.parseFromString(xml, "application/xml");
+            let cleanXml = xml.replace(/(<\/?)(\w+:)/g, "$1"); // remove namespace prefixes
+            const doc = parser.parseFromString(cleanXml, "application/xml");
 
             const getText = tag => doc.getElementsByTagName(tag)[0]?.textContent;
 
@@ -85,12 +85,12 @@
                 abbreviation: getText("abbreviation"),
                 capital: getText("capital"),
                 timezone: getText("timezone"),
-                top_cities: Array.from(doc.getElementsByTagName("top_cities"))
-                    .flatMap(tc => Array.from(tc.getElementsByTagName("City")).map(city => ({
-                        name: city.getElementsByTagName("name")[0]?.textContent,
-                        population: city.getElementsByTagName("population")[0]?.textContent
-                    })))
+                top_cities: Array.from(doc.getElementsByTagName("City")).map(city => ({
+                    name: city.getElementsByTagName("name")[0]?.textContent,
+                    population: city.getElementsByTagName("population")[0]?.textContent
+                }))
             };
+
 
             showResult(data);
         }
