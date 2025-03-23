@@ -74,8 +74,11 @@
                 body: soapBody
             });
 
+            const rawXml = await res.text();
+            console.log("SOAP raw response:", rawXml);
+
             const parser = new DOMParser();
-            let cleanXml = xml.replace(/(<\/?)(\w+:)/g, "$1"); // remove namespace prefixes
+            const cleanXml = rawXml.replace(/(<\/?)(\w+:)/g, "$1"); // strip namespace prefixes
             const doc = parser.parseFromString(cleanXml, "application/xml");
 
             const getText = tag => doc.getElementsByTagName(tag)[0]?.textContent;
@@ -91,7 +94,7 @@
                 }))
             };
 
-
+            console.log("Parsed SOAP data:", data);
             showResult(data);
         }
 
