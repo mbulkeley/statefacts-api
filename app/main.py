@@ -2,8 +2,8 @@ from flask import Flask, send_from_directory
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
 
-from app.state_routes import state_routes
-from app.soap_service import soap_wsgi_app
+from state_routes import state_routes
+from soap_service import soap_wsgi_app
 
 app = Flask(__name__)
 app.register_blueprint(state_routes)
