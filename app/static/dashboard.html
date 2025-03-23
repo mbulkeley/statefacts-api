@@ -55,6 +55,9 @@
                 const opt = document.createElement('option');
                 opt.value = state.abbreviation;
                 opt.textContent = `${state.name} (${state.abbreviation})`;
+                if (state.abbreviation === "CO") {
+                    opt.selected = true;
+                }
                 select.appendChild(opt);
             });
         }
@@ -114,7 +117,7 @@
         <p><strong>Capital:</strong> ${data.capital}</p>
         <p><strong>Timezone:</strong> ${data.timezone}</p>
         <p><strong>Top Cities:</strong></p>
-        <ul>${data.top_cities.map(c => `<li>${c.name} — ${c.population}</li>`).join('')}</ul>
+        <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${c.population}</li>`).join('')}</ul>
       `;
         }
 

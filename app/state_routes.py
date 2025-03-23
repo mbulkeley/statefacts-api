@@ -42,7 +42,7 @@ def get_states():
         } for r in rows])
     except Exception as e:
         return jsonify(error=str(e)), 500
-    
+
 @state_routes.route('/states', methods=['GET'])
 def list_states():
     conn = get_connection()
@@ -52,24 +52,24 @@ def list_states():
     conn.close()
     return jsonify(states=[{"name": row[0], "abbreviation": row[1]} for row in rows])
 
-
 @state_routes.route('/states/<abbr>')
 def get_state_details(abbr):
     try:
         conn = get_connection()
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT id, name, capital, timezone FROM states WHERE abbreviation = %s",
+                "SELECT name, capital, timezone FROM states WHERE abbreviation = %s",
                 (abbr.upper(),)
             )
             state = cur.fetchone()
             if not state:
                 return jsonify(error="State not found"), 404
 
-            state_id, name, capital, timezone = state
+            name, capital, timezone = state
+
             cur.execute(
-                "SELECT name, population FROM cities WHERE state_id = %s ORDER BY population DESC LIMIT 5",
-                (state_id,)
+                "SELECT name, population FROM cities WHERE state_abbr = %s ORDER BY population DESC LIMIT 5",
+                (abbr.upper(),)
             )
             cities = cur.fetchall()
         conn.close()
