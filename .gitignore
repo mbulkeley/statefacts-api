@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Env files
+.env
+
+# Docker
+*.log
+*.pid
+*.sock
