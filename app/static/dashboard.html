@@ -33,10 +33,7 @@
 
     <label for="stateSelect">Choose a state:</label>
     <select id="stateSelect">
-        <option value="CA">California</option>
-        <option value="NY">New York</option>
-        <option value="TX">Texas</option>
-        <!-- Add more if you want -->
+        <option disabled selected>Loading states...</option>
     </select>
 
     <br />
@@ -48,6 +45,19 @@
 
     <script>
         const output = document.getElementById('output');
+
+        async function loadStates() {
+            const res = await fetch('/states');
+            const data = await res.json();
+            const select = document.getElementById('stateSelect');
+            select.innerHTML = ''; // Clear loading message
+            data.states.forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state.abbreviation;
+                opt.textContent = `${state.name} (${state.abbreviation})`;
+                select.appendChild(opt);
+            });
+        }
 
         async function fetchREST() {
             const abbr = document.getElementById('stateSelect').value;
@@ -107,6 +117,9 @@
         <ul>${data.top_cities.map(c => `<li>${c.name} — ${c.population}</li>`).join('')}</ul>
       `;
         }
+
+        loadStates();
+
     </script>
 </body>
 

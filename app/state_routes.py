@@ -42,6 +42,16 @@ def get_states():
         } for r in rows])
     except Exception as e:
         return jsonify(error=str(e)), 500
+    
+@state_routes.route('/states', methods=['GET'])
+def list_states():
+    conn = get_connection()
+    with conn.cursor() as cur:
+        cur.execute("SELECT name, abbreviation FROM states ORDER BY name")
+        rows = cur.fetchall()
+    conn.close()
+    return jsonify(states=[{"name": row[0], "abbreviation": row[1]} for row in rows])
+
 
 @state_routes.route('/states/<abbr>')
 def get_state_details(abbr):

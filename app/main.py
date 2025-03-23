@@ -16,7 +16,6 @@ def home():
 def favicon():
     return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-
 # Combine REST + SOAP
 application = DispatcherMiddleware(app, {
     '/soap': soap_wsgi_app
