@@ -12,6 +12,11 @@ app.register_blueprint(state_routes)
 def home():
     return send_from_directory('static', 'dashboard.html')
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+
 # Combine REST + SOAP
 application = DispatcherMiddleware(app, {
     '/soap': soap_wsgi_app

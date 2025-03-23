@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>StateFacts Dashboard</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+        }
+
+        select,
+        button {
+            margin: 0.5rem 0;
+        }
+
+        .result {
+            margin-top: 1rem;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>StateFacts Dashboard</h1>
+
+    <label for="stateSelect">Choose a state:</label>
+    <select id="stateSelect">
+        <option value="CA">California</option>
+        <option value="NY">New York</option>
+        <option value="TX">Texas</option>
+        <!-- Add more if you want -->
+    </select>
+
+    <br />
+
+    <button onclick="fetchREST()">Fetch via REST</button>
+    <button onclick="fetchSOAP()">Fetch via SOAP</button>
+
+    <div class="result" id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function fetchREST() {
+            const abbr = document.getElementById('stateSelect').value;
+            const res = await fetch(`/states/${abbr}`);
+            const data = await res.json();
+            showResult(data);
+        }
+
+        async function fetchSOAP() {
+            const abbr = document.getElementById('stateSelect').value;
+            const soapBody = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:spy="spyne.state.service">
+          <soapenv:Header/>
+          <soapenv:Body>
+            <spy:get_state_info>
+              <spy:abbr>${abbr}</spy:abbr>
+            </spy:get_state_info>
+          </soapenv:Body>
+        </soapenv:Envelope>`;
+
+            const res = await fetch('/soap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/xml' },
+                body: soapBody
+            });
+
+            const xml = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(xml, "application/xml");
+
+            const getText = tag => doc.getElementsByTagName(tag)[0]?.textContent;
+
+            const data = {
+                name: getText("name"),
+                abbreviation: getText("abbreviation"),
+                capital: getText("capital"),
+                timezone: getText("timezone"),
+                top_cities: Array.from(doc.getElementsByTagName("top_cities"))
+                    .flatMap(tc => Array.from(tc.getElementsByTagName("City")).map(city => ({
+                        name: city.getElementsByTagName("name")[0]?.textContent,
+                        population: city.getElementsByTagName("population")[0]?.textContent
+                    })))
+            };
+
+            showResult(data);
+        }
+
+        function showResult(data) {
+            output.innerHTML = `
+        <h3>${data.name} (${data.abbreviation})</h3>
+        <p><strong>Capital:</strong> ${data.capital}</p>
+        <p><strong>Timezone:</strong> ${data.timezone}</p>
+        <p><strong>Top Cities:</strong></p>
+        <ul>${data.top_cities.map(c => `<li>${c.name} — ${c.population}</li>`).join('')}</ul>
+      `;
+        }
+    </script>
+</body>
+
+</html>
