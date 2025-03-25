@@ -25,6 +25,10 @@
             padding: 1rem;
             border-radius: 5px;
         }
+
+        canvas {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 
@@ -43,8 +47,12 @@
 
     <div class="result" id="output"></div>
 
+    <canvas id="populationChart" width="600" height="300"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const output = document.getElementById('output');
+        let populationChart;
 
         async function loadStates() {
             const res = await fetch('/states');
@@ -66,6 +74,16 @@
             const abbr = document.getElementById('stateSelect').value;
             const res = await fetch(`/states/${abbr}`);
             const data = await res.json();
+
+            // Fetch cities separately to get population info
+            const citiesRes = await fetch(`/states/${abbr}/cities`);
+            const cityData = await citiesRes.json();
+
+            data.top_cities = cityData.cities.map(city => ({
+                name: city.city_name,
+                population: city.population
+            }));
+
             showResult(data);
         }
 
@@ -117,12 +135,52 @@
         <p><strong>Capital:</strong> ${data.capital}</p>
         <p><strong>Timezone:</strong> ${data.timezone}</p>
         <p><strong>Top Cities:</strong></p>
-        <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${c.population}</li>`).join('')}</ul>
+        <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
       `;
+
+            if (data.top_cities && data.top_cities.length > 0) {
+                renderPopulationChart(data.top_cities);
+            } else {
+                clearChart();
+            }
+        }
+
+        function renderPopulationChart(cities) {
+            const ctx = document.getElementById('populationChart').getContext('2d');
+            const labels = cities.map(c => c.name);
+            const data = cities.map(c => Number(c.population));
+
+            if (populationChart) {
+                populationChart.destroy();
+            }
+
+            populationChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Population',
+                        data: data,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function clearChart() {
+            if (populationChart) {
+                populationChart.destroy();
+                populationChart = null;
+            }
         }
 
         loadStates();
-
     </script>
 </body>
 
