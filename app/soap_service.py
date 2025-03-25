@@ -23,17 +23,17 @@ class StateService(ServiceBase):
             conn = get_connection()
             with conn.cursor() as cur:
                 cur.execute(
-                    "SELECT id, name, capital, timezone FROM states WHERE abbreviation = %s",
+                    "SELECT name, capital, timezone FROM states WHERE abbreviation = %s",
                     (abbr.upper(),)
                 )
                 state = cur.fetchone()
                 if not state:
                     return StateInfo(name="Unknown")
 
-                state_id, name, capital, timezone = state
+                name, capital, timezone = state
                 cur.execute(
-                    "SELECT name, population FROM cities WHERE state_id = %s ORDER BY population DESC LIMIT 5",
-                    (state_id,)
+                    "SELECT name, population FROM cities WHERE state_abbr = %s ORDER BY population DESC LIMIT 5",
+                    (abbr.upper(),)
                 )
                 cities = [City(name=c[0], population=str(c[1])) for c in cur.fetchall()]
             conn.close()
