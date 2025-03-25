@@ -1,4 +1,10 @@
-CREATE TABLE IF NOT EXISTS states (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), abbreviation VARCHAR(2), capital VARCHAR(100), timezone VARCHAR(50));
+CREATE TABLE IF NOT EXISTS states (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    abbreviation VARCHAR(2) NOT NULL PRIMARY KEY,
+    capital VARCHAR(100),
+    timezone VARCHAR(50)
+);
 
 INSERT INTO states (name, abbreviation, capital, timezone) VALUES
 ('Alabama', 'AL', 'Montgomery', 'Central'),
