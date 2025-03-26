@@ -5,7 +5,7 @@
 
 set -e
 
-TIMEOUT=15
+TIMEOUT=60
 QUIET=0
 STRICT=0
 
@@ -21,7 +21,7 @@ wait_for() {
     echoerr "⏳  $i... not yet"
     sleep 1
   done
-
+docker compose -f docker-compose.dev.yml exec api bash
   if nc -z "$HOST" "$PORT" >/dev/null 2>&1; then
     echo "✅ $HOST:$PORT is available"
   else

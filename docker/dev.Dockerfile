@@ -16,4 +16,6 @@ COPY . .
 
 EXPOSE 5000
 
+# Wait for DB, then run Flask
 CMD ["flask", "run", "--host=0.0.0.0"]
+# CMD ["scripts/wait-for-it.sh", "db:3306", "--timeout=90", "--strict", "--", "flask", "run", "--host=0.0.0.0"]
