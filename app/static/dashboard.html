@@ -152,13 +152,26 @@
             showResult(data);
         }
 
+        // Commenting out this section to not show the text version of the population. Using
+        // the function to show just the graph.
+        /*    
+            function showResult(data) {
+                output.innerHTML = `
+            <h3>${data.name} (${data.abbreviation})</h3>
+            <p><strong>Capital:</strong> ${data.capital}</p>
+            <p><strong>Timezone:</strong> ${data.timezone}</p>
+            <p><strong>Top Cities:</strong></p>
+            <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
+          `;
+        */
+
+        // This is just using the chart.js display.
         function showResult(data) {
             output.innerHTML = `
         <h3>${data.name} (${data.abbreviation})</h3>
         <p><strong>Capital:</strong> ${data.capital}</p>
         <p><strong>Timezone:</strong> ${data.timezone}</p>
         <p><strong>Top Cities:</strong></p>
-        <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
       `;
 
             if (data.top_cities && data.top_cities.length > 0) {
