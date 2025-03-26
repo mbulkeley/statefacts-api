@@ -5,6 +5,7 @@ __pycache__/
 *.pyo
 *.pyd
 
+
 # VS Code
 .vscode/
 
@@ -33,3 +34,16 @@ build/
 
 # Makefile backups
 Makefile.bak
+
+# pre-commit
+.pre-commit-config.yaml
+.pre-commit-hooks.yaml
+.pre-commit/
+
+# pytest
+.pytest_cache/
+.cache/
+.mypy_cache/
+
+# Ruff (optional)
+ruff_cache/

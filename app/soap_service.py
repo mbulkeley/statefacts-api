@@ -4,9 +4,11 @@ from spyne.server.wsgi import WsgiApplication
 
 from app.db import get_connection
 
+
 class City(ComplexModel):
     name = Unicode
     population = Unicode
+
 
 class StateInfo(ComplexModel):
     name = Unicode
@@ -14,6 +16,7 @@ class StateInfo(ComplexModel):
     capital = Unicode
     timezone = Unicode
     top_cities = Iterable(City)
+
 
 class StateService(ServiceBase):
 
@@ -24,7 +27,7 @@ class StateService(ServiceBase):
             with conn.cursor() as cur:
                 cur.execute(
                     "SELECT name, capital, timezone FROM states WHERE abbreviation = %s",
-                    (abbr.upper(),)
+                    (abbr.upper(),),
                 )
                 state = cur.fetchone()
                 if not state:
@@ -33,7 +36,7 @@ class StateService(ServiceBase):
                 name, capital, timezone = state
                 cur.execute(
                     "SELECT name, population FROM cities WHERE state_abbr = %s ORDER BY population DESC LIMIT 5",
-                    (abbr.upper(),)
+                    (abbr.upper(),),
                 )
                 cities = [City(name=c[0], population=str(c[1])) for c in cur.fetchall()]
             conn.close()
@@ -42,16 +45,17 @@ class StateService(ServiceBase):
                 abbreviation=abbr.upper(),
                 capital=capital,
                 timezone=timezone,
-                top_cities=cities
+                top_cities=cities,
             )
         except Exception as e:
             return StateInfo(name="Error: " + str(e))
 
+
 soap_app = Application(
     [StateService],
-    tns='spyne.state.service',
-    in_protocol=Soap11(validator='lxml'),
-    out_protocol=Soap11()
+    tns="spyne.state.service",
+    in_protocol=Soap11(validator="lxml"),
+    out_protocol=Soap11(),
 )
 
 soap_wsgi_app = WsgiApplication(soap_app)
