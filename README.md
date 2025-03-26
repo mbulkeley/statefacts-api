@@ -23,7 +23,7 @@
 
 ## Tech Stack
 
-- **Backend:** Flask (REST), Spyne (SOAP), Python 3.11
+- **Backend:** Flask (REST), Spyne (SOAP), Python 3.9.6
 - **Database:** MariaDB
 - **Frontend:** HTML, JavaScript, Chart.js
 - **Infra:** Docker, Docker Compose, `.env` secrets
@@ -62,13 +62,13 @@ DB_HOST=db
 
 ## REST API Endpoints
 
-| Method | Route                     | Description                        |
-|--------|---------------------------|------------------------------------|
-| GET    | `/states`                 | List all states                    |
-| GET    | `/states?timezone=CST`    | Filter states by timezone          |
-| GET    | `/states/<abbr>`          | State details + top 5 cities       |
-| GET    | `/states/<abbr>/cities`   | Top 5 cities only                  |
-| GET    | `/search?q=keyword`       | (Coming soon) Search by city/state |
+| Method | Route                     | Description                             |
+|--------|---------------------------|-----------------------------------------|
+| GET    | `/states`                 | List all states                         |
+| GET    | `/states?timezone=CST`    | (Coming soon) Filter states by timezone |
+| GET    | `/states/<abbr>`          | State details + top 5 cities            |
+| GET    | `/states/<abbr>/cities`   | Top 5 cities only                       |
+| GET    | `/search?q=keyword`       | (Coming soon) Search by city/state      |
 
 ---
 
