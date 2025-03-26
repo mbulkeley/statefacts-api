@@ -1,15 +1,35 @@
 # Python
-.venv/
 __pycache__/
+*.py[cod]
 *.pyc
+*.pyo
+*.pyd
 
 # VS Code
 .vscode/
 
+# Virtualenv
+.venv/
+venv/
+
+# Tests
+tests/__pycache__/
+
 # Env files
 .env
+.env.*
 
 # Docker
+docker-compose.override.yml
+*.bak
 *.log
 *.pid
 *.sock
+
+# Bytecode and cache
+*.egg-info/
+dist/
+build/
+
+# Makefile backups
+Makefile.bak

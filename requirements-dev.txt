@@ -1,0 +1,12 @@
+# Base requirements
+-r requirements.txt
+
+# Testing
+pytest
+pytest-flask
+requests
+
+# Optional development tools
+black
+flake8
+ipython

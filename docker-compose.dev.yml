@@ -1,0 +1,41 @@
+services:
+  db:
+    image: yobasystems/alpine-mariadb:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init_states.sql:/docker-entrypoint-initdb.d/init_states.sql
+      - ./init_top_cities.sql:/docker-entrypoint-initdb.d/init_top_cities.sql
+    ports:
+      - "3307:3306"
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - .:/code
+    environment:
+      FLASK_DEBUG: 1 # FLASK_ENV is deprecated as of Flask 2.3
+      FLASK_APP: app.main:create_app
+      DB_HOST: db
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+
+volumes:
+  db_data:

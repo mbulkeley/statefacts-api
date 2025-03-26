@@ -1,0 +1,13 @@
+# General
+__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Dev-only
+tests/
+.vscode/
+.env.dev
+docker-compose.dev.yml
+docker/dev.Dockerfile
+#requirements-dev.txt

@@ -2,7 +2,7 @@ from spyne import Application, rpc, ServiceBase, Unicode, Iterable, ComplexModel
 from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 
-from db import get_connection
+from app.db import get_connection
 
 class City(ComplexModel):
     name = Unicode

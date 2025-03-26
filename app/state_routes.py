@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from db import get_connection
+from app.db import get_connection
 
 state_routes = Blueprint('state_routes', __name__)
 
