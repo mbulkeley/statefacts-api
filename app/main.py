@@ -12,6 +12,14 @@ def create_app(testing=False):
     # Register REST routes
     app.register_blueprint(state_routes)
 
+    # Error handler for visibility in CI
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        import traceback
+        print("🔴 Uncaught Exception:", e)
+        traceback.print_exc()
+        return {"error": str(e)}, 500
+
     # Serve the dashboard UI
     @app.route('/')
     def home():

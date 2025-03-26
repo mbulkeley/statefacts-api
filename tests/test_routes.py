@@ -10,6 +10,7 @@ def client():
 
 def test_get_states(client):
     response = client.get("/states")
+    print("Response JSON:", response.get_data(as_text=True))
     assert response.status_code == 200
     data = response.get_json()
     assert "states" in data
@@ -17,6 +18,7 @@ def test_get_states(client):
 
 def test_get_specific_state(client):
     response = client.get("/states/CO")
+    print("Response JSON:", response.get_data(as_text=True))
     assert response.status_code == 200
     data = response.get_json()
     assert data["abbreviation"] == "CO"
