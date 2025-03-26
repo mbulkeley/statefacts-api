@@ -19,6 +19,7 @@ services:
   api:
     build:
       context: .
+      dockerfile: docker/prod.Dockerfile
     restart: always
     env_file:
       - .env

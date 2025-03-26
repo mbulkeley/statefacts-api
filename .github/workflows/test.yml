@@ -1,0 +1,65 @@
+# name: Run Tests (CI)
+
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+
+#     services:
+#       db:
+#         image: yobasystems/alpine-mariadb:latest
+#         env:
+#           MYSQL_ROOT_PASSWORD: testroot
+#           MYSQL_DATABASE: testdb
+#           MYSQL_USER: testuser
+#           MYSQL_PASSWORD: testpass
+#         ports:
+#           - 3307:3306
+#         options: >-
+#           --health-cmd="mysqladmin ping -h localhost"
+#           --health-interval=10s
+#           --health-timeout=5s
+#           --health-retries=5
+
+#     env:
+#       DB_HOST: 127.0.0.1
+#       DB_NAME: testdb
+#       DB_USER: testuser
+#       DB_PASSWORD: testpass
+#       MYSQL_ROOT_PASSWORD: testroot
+#       MYSQL_DATABASE: testdb
+#       MYSQL_USER: testuser
+#       MYSQL_PASSWORD: testpass
+#       FLASK_APP: app.main:create_app
+#       FLASK_DEBUG: 1
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: 3.10.13
+
+#       - name: Install Docker Compose
+#         run: sudo apt-get install docker-compose -y
+
+#       - name: Build containers
+#         run: docker compose -f docker-compose.dev.yml build
+
+#       - name: Start services
+#         run: docker compose -f docker-compose.dev.yml up -d
+
+#       - name: Wait for DB and run tests
+#         run: |
+#           docker compose -f docker-compose.dev.yml exec api bash -c "chmod +x scripts/wait-for-it.sh && ./scripts/wait-for-it.sh db:3306 --timeout=60 --strict -- pytest"
+
+#       - name: Shutdown
+#         if: always()
+#         run: docker compose -f docker-compose.dev.yml down
