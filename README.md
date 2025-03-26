@@ -1,4 +1,4 @@
-# StateFacts API
+# State Facts API
 
 [![Docker](https://img.shields.io/badge/dockerized-yes-blue)](https://www.docker.com/)
 [![Python](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/)
@@ -30,7 +30,7 @@
 
 ---
 
-## Getting Started (Dev)
+## Getting Started
 
 Clone using SSH:
 
