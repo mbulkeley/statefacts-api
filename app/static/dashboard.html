@@ -3,37 +3,62 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>State Facts Dashboard</title>
+    <title>StateFacts Dashboard</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
     <style>
+        /* General layout */
         body {
             font-family: sans-serif;
             padding: 2rem;
+            max-width: 800px;
+            margin: auto;
         }
 
+        h1 {
+            margin-bottom: 1rem;
+        }
+
+        label,
         select,
         button {
-            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        select {
+            margin-left: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        button {
+            margin: 0.5rem 0.5rem 0 0;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
         }
 
         .result {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
 
-        pre {
-            background: #f4f4f4;
-            padding: 1rem;
-            border-radius: 5px;
+        ul {
+            padding-left: 1.5rem;
         }
 
         canvas {
+            display: block;
+        }
+
+        /* Chart container with fixed height */
+        .chart-container {
+            max-width: 600px;
+            height: 300px;
             margin-top: 2rem;
         }
     </style>
 </head>
 
 <body>
-    <h1>State Facts Dashboard</h1>
+    <h1>StateFacts Dashboard</h1>
 
     <label for="stateSelect">Choose a state:</label>
     <select id="stateSelect">
@@ -47,7 +72,9 @@
 
     <div class="result" id="output"></div>
 
-    <canvas id="populationChart" width="600" height="300"></canvas>
+    <div class="chart-container">
+        <canvas id="populationChart"></canvas>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -75,7 +102,6 @@
             const res = await fetch(`/states/${abbr}`);
             const data = await res.json();
 
-            // Fetch cities separately to get population info
             const citiesRes = await fetch(`/states/${abbr}/cities`);
             const cityData = await citiesRes.json();
 
@@ -106,10 +132,8 @@
             });
 
             const rawXml = await res.text();
-            console.log("SOAP raw response:", rawXml);
-
             const parser = new DOMParser();
-            const cleanXml = rawXml.replace(/(<\/?)(\w+:)/g, "$1"); // strip namespace prefixes
+            const cleanXml = rawXml.replace(/(<\/?)(\w+:)/g, "$1");
             const doc = parser.parseFromString(cleanXml, "application/xml");
 
             const getText = tag => doc.getElementsByTagName(tag)[0]?.textContent;
@@ -125,30 +149,16 @@
                 }))
             };
 
-            console.log("Parsed SOAP data:", data);
             showResult(data);
         }
 
-        // Commenting out this section to not show the text version of the population. Using
-        // the function to show just the graph.
-        /*    
-            function showResult(data) {
-                output.innerHTML = `
-            <h3>${data.name} (${data.abbreviation})</h3>
-            <p><strong>Capital:</strong> ${data.capital}</p>
-            <p><strong>Timezone:</strong> ${data.timezone}</p>
-            <p><strong>Top Cities:</strong></p>
-            <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
-          `;
-        */
-
-        // This is just using the chart.js display.
         function showResult(data) {
             output.innerHTML = `
         <h3>${data.name} (${data.abbreviation})</h3>
         <p><strong>Capital:</strong> ${data.capital}</p>
         <p><strong>Timezone:</strong> ${data.timezone}</p>
         <p><strong>Top Cities:</strong></p>
+        <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
       `;
 
             if (data.top_cities && data.top_cities.length > 0) {
@@ -179,6 +189,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: { beginAtZero: true }
                     }
