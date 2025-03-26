@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>StateFacts Dashboard</title>
+    <title>State Facts Dashboard</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style>
         body {
@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <h1>StateFacts Dashboard</h1>
+    <h1>State Facts Dashboard</h1>
 
     <label for="stateSelect">Choose a state:</label>
     <select id="stateSelect">
@@ -129,13 +129,26 @@
             showResult(data);
         }
 
+        // Commenting out this section to not show the text version of the population. Using
+        // the function to show just the graph.
+        /*    
+            function showResult(data) {
+                output.innerHTML = `
+            <h3>${data.name} (${data.abbreviation})</h3>
+            <p><strong>Capital:</strong> ${data.capital}</p>
+            <p><strong>Timezone:</strong> ${data.timezone}</p>
+            <p><strong>Top Cities:</strong></p>
+            <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
+          `;
+        */
+
+        // This is just using the chart.js display.
         function showResult(data) {
             output.innerHTML = `
         <h3>${data.name} (${data.abbreviation})</h3>
         <p><strong>Capital:</strong> ${data.capital}</p>
         <p><strong>Timezone:</strong> ${data.timezone}</p>
         <p><strong>Top Cities:</strong></p>
-        <ul>${(data.top_cities || []).map(c => `<li>${c.name} — ${Number(c.population).toLocaleString()}</li>`).join('')}</ul>
       `;
 
             if (data.top_cities && data.top_cities.length > 0) {

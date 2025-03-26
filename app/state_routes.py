@@ -16,7 +16,7 @@ def normalize_timezone(input_tz):
             return standard
     return None
 
-@state_routes.route('/states')
+@state_routes.route('/states', methods=['GET'])
 def get_states():
     timezone = request.args.get('timezone')
     try:
@@ -31,7 +31,7 @@ def get_states():
                     (norm_tz,)
                 )
             else:
-                cur.execute("SELECT name, abbreviation, capital, timezone FROM states")
+                cur.execute("SELECT name, abbreviation, capital, timezone FROM states ORDER BY name")
             rows = cur.fetchall()
         conn.close()
         return jsonify(states=[{
@@ -42,15 +42,6 @@ def get_states():
         } for r in rows])
     except Exception as e:
         return jsonify(error=str(e)), 500
-
-@state_routes.route('/states', methods=['GET'])
-def list_states():
-    conn = get_connection()
-    with conn.cursor() as cur:
-        cur.execute("SELECT name, abbreviation FROM states ORDER BY name")
-        rows = cur.fetchall()
-    conn.close()
-    return jsonify(states=[{"name": row[0], "abbreviation": row[1]} for row in rows])
 
 @state_routes.route('/states/<abbr>')
 def get_state_details(abbr):
@@ -81,6 +72,28 @@ def get_state_details(abbr):
             "top_cities": [
                 {"name": c[0], "population": c[1]} for c in cities
             ]
+        })
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+@state_routes.route('/states/<abbr>/cities', methods=['GET'])
+def get_state_cities(abbr):
+    try:
+        conn = get_connection()
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT name, population FROM cities WHERE state_abbr = %s ORDER BY population DESC LIMIT 5",
+                (abbr.upper(),)
+            )
+            rows = cur.fetchall()
+        conn.close()
+
+        if not rows:
+            return jsonify(error="No cities found for this state"), 404
+
+        return jsonify({
+            "state": abbr.upper(),
+            "cities": [{"city_name": r[0], "population": r[1]} for r in rows]
         })
     except Exception as e:
         return jsonify(error=str(e)), 500
