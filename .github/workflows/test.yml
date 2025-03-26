@@ -56,6 +56,11 @@ jobs:
       - name: Start services
         run: docker compose -f docker-compose.dev.yml up -d
 
+      - name: Wait for DB and run tests
+        run: |
+          chmod +x scripts/wait-for-it.sh
+          scripts/wait-for-it.sh db:3306 --timeout=30 --strict -- docker compose -f docker-compose.dev.yml exec api pytest
+          
       - name: Run tests
         run: docker compose -f docker-compose.dev.yml exec api pytest
 
