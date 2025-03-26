@@ -11,8 +11,6 @@ services:
       - db_data:/var/lib/mysql
       - ./init_states.sql:/docker-entrypoint-initdb.d/init_states.sql
       - ./init_top_cities.sql:/docker-entrypoint-initdb.d/init_top_cities.sql
-    ports:
-      - "3307:3306"
 
   api:
     build:
