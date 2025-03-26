@@ -6,7 +6,7 @@ up-detached:
 	docker compose -f docker-compose.dev.yml up -d --build
 
 down:
-	docker compose -f docker-compose.dev.yml down
+	docker compose -f docker-compose.dev.yml down -v
 
 build:
 	docker compose -f docker-compose.dev.yml build

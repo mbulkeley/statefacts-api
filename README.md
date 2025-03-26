@@ -5,7 +5,6 @@
 ![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi-red)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![CI](https://github.com/mbulkeley/statefacts-api/actions/workflows/test.yml/badge.svg)
 
 
 **State Facts** is a containerized REST + SOAP API with a responsive dashboard that provides U.S. state facts and population data. Built with Flask, Spyne, MariaDB, and Chart.js — and deployed on Raspberry Pi.

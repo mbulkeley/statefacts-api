@@ -16,6 +16,9 @@ COPY . .
 
 EXPOSE 5000
 
+ENV PYTHONPATH=/code
+
 # Wait for DB, then run Flask
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["python3", "-m", "app.main"]
+# CMD ["flask", "run", "--host=0.0.0.0"]
 # CMD ["scripts/wait-for-it.sh", "db:3306", "--timeout=90", "--strict", "--", "flask", "run", "--host=0.0.0.0"]
