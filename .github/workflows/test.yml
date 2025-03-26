@@ -31,6 +31,10 @@ jobs:
       DB_NAME: testdb
       DB_USER: testuser
       DB_PASSWORD: testpass
+      MYSQL_ROOT_PASSWORD: testroot
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
       FLASK_APP: app.main:create_app
       FLASK_DEBUG: 1
 
