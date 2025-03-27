@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev \
     python3-dev \
     iputils-ping \
+    default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
