@@ -55,13 +55,12 @@ jobs:
       - name: Start services
         run: docker compose -f docker-compose.dev.yml up -d
 
-      - name: Wait for DB to be ready
-        run: |
-          chmod +x scripts/wait-for-it.sh
-          ./scripts/wait-for-it.sh db:3306 --timeout=60 --strict
-
-      - name: Run tests
-        run: docker compose -f docker-compose.dev.yml run --rm api pytest
+      - name: Run tests (inside container with DB wait)
+        run: >
+          docker compose -f docker-compose.dev.yml run --rm api
+          bash -c "chmod +x scripts/wait-for-it.sh &&
+                   ./scripts/wait-for-it.sh db:3306 --timeout=60 --strict &&
+                   pytest"
 
       - name: Shutdown
         if: always()
