@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 from app.db import get_connection
 
 state_routes = Blueprint("state_routes", __name__)
-print("oops")
 
 
 def normalize_timezone(input_tz):
